@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MiPrimerWebApiM3.Contexts;
 using MiPrimerWebApiM3.Entities;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MiPrimerWebApiM3.Controllers
 {
-    [Route("/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class BooksController : ControllerBase
     {
@@ -23,7 +21,20 @@ namespace MiPrimerWebApiM3.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Book>> Get()
         {
-            return context.Books.Include(x => x.Autor).ToList();
+            return context.Books.ToList();
+        }
+
+        [HttpGet("{id}", Name = "ObtenerLibro")]
+        public ActionResult<Book> Get(int id)
+        {
+            var book = context.Books.FirstOrDefault(x => x.Id == id);
+
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            return book;
         }
 
         [HttpPost]
@@ -31,7 +42,32 @@ namespace MiPrimerWebApiM3.Controllers
         {
             context.Books.Add(book);
             context.SaveChanges();
-            return new CreatedAtRouteResult("obtenerLibro", new { id = book.Id }, book);
+            return new CreatedAtRouteResult("ObtenerLibro", new { id = book.Id }, book);
+        }
+        [HttpPut("{id}")]
+        public ActionResult Put(int id, [FromBody] Book book)
+        {
+            if (id != book.Id)
+            {
+                return BadRequest();
+            }
+            context.Entry(book).State = EntityState.Modified;
+            context.SaveChanges();
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult<Book> Delete(int id)
+        {
+            var book = context.Books.FirstOrDefault(x => x.Id == id);
+
+            if (book == null)
+            {
+                return NotFound();
+            }
+            context.Books.Remove(book);
+            context.SaveChanges();
+            return book;
         }
     }
 }

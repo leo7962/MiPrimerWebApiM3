@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MiPrimerWebApiM3.Contexts;
 using MiPrimerWebApiM3.Entities;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MiPrimerWebApiM3.Controllers
 {
@@ -23,13 +21,13 @@ namespace MiPrimerWebApiM3.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Autor>> Get()
         {
-            return context.Autors.ToList();
+            return context.Autors.Include(x => x.Books).ToList();
         }
 
         [HttpGet("{id}", Name = "ObtenerAutor")]
         public ActionResult<Autor> Get(int id)
         {
-            var autor = context.Autors.FirstOrDefault(x => x.Id == id);
+            var autor = context.Autors.Include(x => x.Books).FirstOrDefault(x => x.Id == id);
 
             if (autor == null)
             {
@@ -44,7 +42,7 @@ namespace MiPrimerWebApiM3.Controllers
         {
             context.Autors.Add(autor);
             context.SaveChanges();
-            return new CreatedAtRouteResult("ObtenerAutor", new { id = autor.Id}, autor);
+            return new CreatedAtRouteResult("ObtenerAutor", new { id = autor.Id }, autor);
         }
 
         [HttpPut("{id}")]
@@ -60,7 +58,7 @@ namespace MiPrimerWebApiM3.Controllers
         }
 
         [HttpDelete("{id}")]
-        public ActionResult<Autor> Delete (int id)
+        public ActionResult<Autor> Delete(int id)
         {
             var autor = context.Autors.FirstOrDefault(x => x.Id == id);
 
