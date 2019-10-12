@@ -32,7 +32,7 @@ namespace MiPrimerWebApiM3.Controllers
         [ServiceFilter(typeof(MyActionFilter))]
         public ActionResult<IEnumerable<Autor>> Get()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
             claseB.HacerAlgo();
             return context.Autors.ToList();
         }
