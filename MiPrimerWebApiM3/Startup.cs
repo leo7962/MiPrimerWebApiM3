@@ -7,7 +7,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MiPrimerWebApiM3.Contexts;
-using MiPrimerWebApiM3.Controllers;
 using MiPrimerWebApiM3.Helpers;
 using WebApiModulo4.Services;
 
@@ -61,7 +60,6 @@ namespace MiPrimerWebApiM3
             {
                 endpoints.MapControllers();
             });
-            
         }
     }
 }
